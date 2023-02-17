@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
 namespace IntNote
 {
-    public partial class MainForm
+    public partial class MainForm : Form
     {
         private int cnt;
         private int cnt1;
@@ -23,25 +23,25 @@ namespace IntNote
 
         private void SaveCtrlSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
-                File.WriteAllText(SaveFileDialog1.FileName, TextBox1.Text);
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                File.WriteAllText(saveFileDialog1.FileName, mainTextBox.Text);
         }
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, "Do you want to save your changes?", "Save", MessageBoxButtons.YesNoCancel);
-            TextBox1.Text = "";
+            MessageBox.Show(this, "Do you want to save your changes?", "Create New File", MessageBoxButtons.YesNoCancel);
+            mainTextBox.Text = "";
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
-                TextBox1.Text = File.ReadAllText(OpenFileDialog1.FileName);
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                mainTextBox.Text = File.ReadAllText(openFileDialog1.FileName);
         }
 
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PrintDialog1.ShowDialog();
+            printDialog1.ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -51,39 +51,39 @@ namespace IntNote
 
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox1.Undo();
+            mainTextBox.Undo();
         }
 
         private void CutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox1.Cut();
+            mainTextBox.Cut();
         }
 
         private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox1.Copy();
+            mainTextBox.Copy();
         }
 
         private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox1.Paste();
+            mainTextBox.Paste();
         }
 
         private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextBox1.SelectAll();
+            mainTextBox.SelectAll();
         }
 
         private void FontFaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FontDialog1.ShowDialog() == DialogResult.OK)
-                TextBox1.Font = FontDialog1.Font;
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+                mainTextBox.Font = fontDialog1.Font;
         }
 
         private void FontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ColorDialog1.ShowDialog() == DialogResult.OK)
-                TextBox1.ForeColor = ColorDialog1.Color;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                mainTextBox.ForeColor = colorDialog1.Color;
         }
 
         private void AboutNotepadCloneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,8 +98,8 @@ namespace IntNote
 
         private void PageColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ColorDialog1.ShowDialog() == DialogResult.OK)
-                TextBox1.BackColor = ColorDialog1.Color;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                mainTextBox.BackColor = colorDialog1.Color;
         }
 
         private void TrueDarkToolStripMenuItem_Click(object sender, EventArgs e)
@@ -109,13 +109,13 @@ namespace IntNote
             {
                 case 1:
                 {
-                    TextBox1.BackColor = trueDark;
+                    mainTextBox.BackColor = trueDark;
                     cnt = 0;
                     break;
                 }
                 case 0:
                 {
-                    TextBox1.BackColor = trueDark;
+                    mainTextBox.BackColor = trueDark;
                     cnt = 1;
                     break;
                 }
@@ -130,13 +130,13 @@ namespace IntNote
             {
                 case 1:
                 {
-                    TextBox1.BackColor = deepSlate;
+                    mainTextBox.BackColor = deepSlate;
                     cnt1 = 0;
                     break;
                 }
                 case 0:
                 {
-                    TextBox1.BackColor = deepSlate;
+                    mainTextBox.BackColor = deepSlate;
                     cnt1 = 1;
                     break;
                 }
@@ -150,13 +150,13 @@ namespace IntNote
             {
                 case 1:
                 {
-                    TextBox1.BackColor = defaultDark;
+                    mainTextBox.BackColor = defaultDark;
                     cnt2 = 0;
                     break;
                 }
                 case 0:
                 {
-                    TextBox1.BackColor = defaultDark;
+                    mainTextBox.BackColor = defaultDark;
                     cnt2 = 1;
                     break;
                 }
@@ -170,13 +170,13 @@ namespace IntNote
             {
                 case 1:
                 {
-                    TextBox1.BackColor = Amoled;
+                    mainTextBox.BackColor = Amoled;
                     cnt3 = 0;
                     break;
                 }
                 case 0:
                 {
-                    TextBox1.BackColor = Amoled;
+                    mainTextBox.BackColor = Amoled;
                     cnt3 = 1;
                     break;
                 }
