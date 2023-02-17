@@ -59,10 +59,10 @@ namespace IntNote
 
             // Adjust the window height to accommodate the size of the text.
             SizeF size = CreateGraphics().MeasureString(
-                txtMessage.Text,
+                txtMessage.Text + ".",
                 txtMessage.Font,
                 txtMessage.Width);
-            Height += (int)size.Height - txtMessage.Height;
+            Height += (int)size.Height - txtMessage.Height + txtMessage.Font.Height;
         }
 
         private void InhibitEscapeKeyClosing()

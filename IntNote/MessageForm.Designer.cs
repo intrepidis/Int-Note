@@ -40,7 +40,7 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(551, 167);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(4);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(100, 34);
             this.btnOK.TabIndex = 1;
@@ -49,17 +49,15 @@
             // 
             // txtMessage
             // 
-            this.txtMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMessage.BackColor = System.Drawing.SystemColors.Window;
             this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtMessage.Location = new System.Drawing.Point(60, 44);
-            this.txtMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtMessage.Location = new System.Drawing.Point(0, 0);
+            this.txtMessage.Margin = new System.Windows.Forms.Padding(0);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
-            this.txtMessage.Size = new System.Drawing.Size(547, 58);
+            this.txtMessage.Size = new System.Drawing.Size(667, 128);
             this.txtMessage.TabIndex = 0;
             this.txtMessage.TabStop = false;
             this.txtMessage.Text = "txtMessage";
@@ -73,9 +71,9 @@
             this.panelMain.BackColor = System.Drawing.SystemColors.Window;
             this.panelMain.Controls.Add(this.txtMessage);
             this.panelMain.Location = new System.Drawing.Point(0, 0);
-            this.panelMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelMain.Margin = new System.Windows.Forms.Padding(0);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(667, 146);
+            this.panelMain.Size = new System.Drawing.Size(667, 128);
             this.panelMain.TabIndex = 2;
             // 
             // btnCancel
@@ -83,7 +81,7 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(427, 167);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(100, 34);
             this.btnCancel.TabIndex = 0;
@@ -101,7 +99,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MessageForm";

@@ -7,9 +7,16 @@ namespace IntNote
 {
     public partial class MainForm : Form
     {
-        public MainForm() => InitializeComponent();
+        public MainForm(string file)
+        {
+            InitializeComponent();
+
+            if (!string.IsNullOrEmpty(file))
+                OpenFile(file);
+        }
 
         private bool dirty = false;
+        private string currentFile = "";
         private static readonly string nl = Environment.NewLine;
 
         private void MainTextBox_TextChanged(object sender, EventArgs e) => dirty = true;
@@ -19,8 +26,7 @@ namespace IntNote
             if (!DirtyCheckPass("Create New File"))
                 return;
 
-            mainTextBox.Text = "";
-            dirty = false;
+            NewFile();
         }
 
         private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -29,19 +35,24 @@ namespace IntNote
                 return;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                mainTextBox.Text = File.ReadAllText(openFileDialog1.FileName);
-                dirty = false;
-            }
+                OpenFile(openFileDialog1.FileName);
         }
 
         private void SaveFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (string.IsNullOrEmpty(currentFile))
             {
-                File.WriteAllText(saveFileDialog1.FileName, mainTextBox.Text);
-                dirty = false;
+                SaveAsFile_ToolStripMenuItem_Click(sender, e);
+                return;
             }
+
+            SaveFile(currentFile);
+        }
+
+        private void SaveAsFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                SaveFile(saveFileDialog1.FileName);
         }
 
         private void ExitProgram_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -50,6 +61,11 @@ namespace IntNote
                 return;
 
             Close();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !DirtyCheckPass("Exit App");
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -74,7 +90,7 @@ namespace IntNote
         {
             new MessageForm
             {
-                Message = $"Int-Note - Text editor in dark mode{nl}https://github.com/intrepidis/Int-Note",
+                Message = $"{nl}{nl}{nl}Int-Note - Text editor in dark mode{nl}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
                 Title = "About Int-Note",
             }.ShowDialog(this);
         }
@@ -116,13 +132,45 @@ namespace IntNote
                 mainTextBox.BackColor = (Color)bg;
         }
 
+        private void NewFile()
+        {
+            mainTextBox.ClearUndo();
+            mainTextBox.Clear();
+
+            currentFile = "";
+            dirty = false;
+        }
+
+        private void OpenFile(string file)
+        {
+            mainTextBox.ClearUndo();
+            mainTextBox.Text = File.ReadAllText(file);
+            mainTextBox.SelectionStart = 0;
+            mainTextBox.SelectionLength = 0;
+
+            openFileDialog1.FileName = file;
+            saveFileDialog1.FileName = file;
+            currentFile = file;
+            dirty = false;
+        }
+
+        private void SaveFile(string file)
+        {
+            File.WriteAllText(file, mainTextBox.Text);
+
+            openFileDialog1.FileName = file;
+            saveFileDialog1.FileName = file;
+            currentFile = file;
+            dirty = false;
+        }
+
         private bool DirtyCheckPass(string operation)
         {
             if (dirty)
             {
                 DialogResult result = new MessageForm
                 {
-                    Message = "Is it ok to lose the unsaved changes?",
+                    Message = $"{nl}Is it ok to lose the unsaved changes?{nl}{nl}{nl}",
                     Title = operation,
                     CancelText = "Cancel",
                     SwitchButtonLocations = true,
