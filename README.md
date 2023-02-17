@@ -1,8 +1,6 @@
-# WinNOTE
-A Free Dark Mode Text Editor
+# Int-Note
+Text editor in dark mode. Forked from Deybedanta WinNote.
 
-WinNOTE is a notepad app which bears the resemblance to Microsoft Notepad, but with dark mode, and some less features. This is especially meant for those, who do not want extensive pressure on their eyes as well as quick note taking.
+Int-Note is a simple text editor in dark mode.
 
-Website: https://sites.google.com/view/winnote
-
-Enjoy! <3
+https://github.com/intrepidis/Int-Note
