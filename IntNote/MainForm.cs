@@ -7,71 +7,76 @@ namespace IntNote
 {
     public partial class MainForm : Form
     {
-        private int cnt;
-        private int cnt1;
-        private int cnt2;
-        private int cnt3;
-        private Color Amoled = new();
-        private Color defaultDark = new();
-        private Color deepSlate = new();
-        private Color trueDark = new();
+        public MainForm() => InitializeComponent();
 
-        public MainForm()
+        private bool dirty = false;
+        private static readonly string nl = Environment.NewLine;
+
+        private void MainTextBox_TextChanged(object sender, EventArgs e) => dirty = true;
+
+        private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InitializeComponent();
+            if (!DirtyCheckPass("Create New File"))
+                return;
+
+            mainTextBox.Text = "";
+            dirty = false;
         }
 
-        private void SaveCtrlSToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!DirtyCheckPass("Open File"))
+                return;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                mainTextBox.Text = File.ReadAllText(openFileDialog1.FileName);
+                dirty = false;
+            }
+        }
+
+        private void SaveFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
                 File.WriteAllText(saveFileDialog1.FileName, mainTextBox.Text);
+                dirty = false;
+            }
         }
 
-        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitProgram_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, "Do you want to save your changes?", "Create New File", MessageBoxButtons.YesNoCancel);
-            mainTextBox.Text = "";
-        }
+            if (!DirtyCheckPass("Exit App"))
+                return;
 
-        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                mainTextBox.Text = File.ReadAllText(openFileDialog1.FileName);
-        }
-
-        private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            printDialog1.ShowDialog();
-        }
-
-        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
             Close();
         }
 
-        private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mainTextBox.Undo();
-        }
+        private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => printDialog1.ShowDialog();
 
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mainTextBox.Cut();
-        }
+        private void Undo_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => mainTextBox.Undo();
 
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mainTextBox.Copy();
-        }
+        private void Cut_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => mainTextBox.Cut();
 
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mainTextBox.Paste();
-        }
+        private void Copy_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => mainTextBox.Copy();
 
-        private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Paste_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => mainTextBox.Paste();
+
+        private void SelectAll_ToolStripMenuItem_Click(object sender, EventArgs e)
+            => mainTextBox.SelectAll();
+
+        private void AboutAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainTextBox.SelectAll();
+            new MessageForm
+            {
+                Message = $"Int-Note - Text editor in dark mode{nl}https://github.com/intrepidis/Int-Note",
+                Title = "About Int-Note",
+            }.ShowDialog(this);
         }
 
         private void FontFaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,109 +88,50 @@ namespace IntNote
         private void FontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-                mainTextBox.ForeColor = colorDialog1.Color;
-        }
-
-        private void AboutNotepadCloneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Int-Note - Text editor in dark mode" + Environment.NewLine + "https://github.com/intrepidis/Int-Note", "About Int-Note", MessageBoxButtons.OK);
-        }
-
-        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Visit https://github.com/intrepidis/Int-Note for details about this app.", "About", MessageBoxButtons.OK);
+                SetStyle(fg: colorDialog1.Color);
         }
 
         private void PageColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-                mainTextBox.BackColor = colorDialog1.Color;
+                SetStyle(bg: colorDialog1.Color);
         }
 
-        private void TrueDarkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TrueDarkToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#9A9A9A");
+
+        private void DeepSlateToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#3D3B3B");
+
+        private void DefaultDarkToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#404040");
+
+        private void JazzyAmoledToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#000000");
+
+        private void SetTheme(string bg) => SetStyle(fg: Color.White, bg: ColorTranslator.FromHtml(bg));
+
+        private void SetStyle(Color? fg = null, Color? bg = null)
         {
-            trueDark = ColorTranslator.FromHtml("#9A9A9A");
-            switch (cnt)
+            if (fg != null)
+                mainTextBox.ForeColor = (Color)fg;
+
+            if (bg != null)
+                mainTextBox.BackColor = (Color)bg;
+        }
+
+        private bool DirtyCheckPass(string operation)
+        {
+            if (dirty)
             {
-                case 1:
+                DialogResult result = new MessageForm
                 {
-                    mainTextBox.BackColor = trueDark;
-                    cnt = 0;
-                    break;
-                }
-                case 0:
-                {
-                    mainTextBox.BackColor = trueDark;
-                    cnt = 1;
-                    break;
-                }
+                    Message = "Is it ok to lose the unsaved changes?",
+                    Title = operation,
+                    CancelText = "Cancel",
+                    SwitchButtonLocations = true,
+                }.ShowDialog(this);
+
+                if (result != DialogResult.OK)
+                    return false;
             }
-
-        }
-
-        private void DeepSlateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            deepSlate = ColorTranslator.FromHtml("#3D3B3B");
-            switch (cnt1)
-            {
-                case 1:
-                {
-                    mainTextBox.BackColor = deepSlate;
-                    cnt1 = 0;
-                    break;
-                }
-                case 0:
-                {
-                    mainTextBox.BackColor = deepSlate;
-                    cnt1 = 1;
-                    break;
-                }
-            }
-        }
-
-        private void DefaultDarkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            defaultDark = ColorTranslator.FromHtml("#404040");
-            switch (cnt2)
-            {
-                case 1:
-                {
-                    mainTextBox.BackColor = defaultDark;
-                    cnt2 = 0;
-                    break;
-                }
-                case 0:
-                {
-                    mainTextBox.BackColor = defaultDark;
-                    cnt2 = 1;
-                    break;
-                }
-            }
-        }
-
-        private void JazzyAmoledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Amoled = ColorTranslator.FromHtml("#000000");
-            switch (cnt3)
-            {
-                case 1:
-                {
-                    mainTextBox.BackColor = Amoled;
-                    cnt3 = 0;
-                    break;
-                }
-                case 0:
-                {
-                    mainTextBox.BackColor = Amoled;
-                    cnt3 = 1;
-                    break;
-                }
-            }
-        }
-
-        private void ChangelogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Int-Note" + Environment.NewLine + "- Forked from Deybedanta WinNote 1.1.", "What's New?", MessageBoxButtons.OK);
+            return true;
         }
     }
 }
