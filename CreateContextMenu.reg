@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\OpenWithIntNote]
+@="Edit with &Int-Note"
+"Icon"="\"C:\\Code\\Intrepidis Note\\Publish\\IntNote.exe\""
+
+[HKEY_CLASSES_ROOT\*\shell\OpenWithIntNote\command]
+@="\"C:\\Code\\Intrepidis Note\\Publish\\IntNote.exe\" \"%1\""
+
