@@ -98,6 +98,31 @@ namespace IntNote
             }.ShowDialog(this);
         }
 
+        private void WordWrap_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectionStart = mainTextBox.SelectionStart;
+            int selectionLength = mainTextBox.SelectionLength;
+
+            if (mainTextBox.WordWrap)
+            {
+                mainTextBox.WordWrap = false;
+                mainTextBox.ScrollBars = ScrollBars.Both;
+            }
+            else
+            {
+                mainTextBox.WordWrap = true;
+                mainTextBox.ScrollBars = ScrollBars.Vertical;
+            }
+
+            mainTextBox.SelectionStart = mainTextBox.Text.Length;
+            mainTextBox.SelectionLength = 0;
+            mainTextBox.ScrollToCaret();
+
+            mainTextBox.SelectionStart = selectionStart;
+            mainTextBox.SelectionLength = selectionLength;
+            mainTextBox.ScrollToCaret();
+        }
+
         private void FontFaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (fontDialog1.ShowDialog() == DialogResult.OK)
