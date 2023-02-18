@@ -7,26 +7,29 @@ namespace IntNote
 {
     public partial class MainForm : Form
     {
-        public MainForm(string file)
+        public MainForm(string filePath)
         {
             InitializeComponent();
 
-            if (!string.IsNullOrEmpty(file))
-                OpenFile(file);
+            theme = new(() => mainTextBox);
+            file = new(ClearFile, SetFile, AnnounceFile);
+
+            if (!string.IsNullOrEmpty(filePath))
+                file.OpenFile(filePath);
         }
 
-        private bool dirty = false;
-        private string currentFile = "";
         private static readonly string nl = Environment.NewLine;
+        private readonly ThemeManager theme;
+        private readonly FileHandler file;
 
-        private void MainTextBox_TextChanged(object sender, EventArgs e) => dirty = true;
+        private void MainTextBox_TextChanged(object sender, EventArgs e) => file.Dirty = true;
 
         private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!DirtyCheckPass("Create New File"))
                 return;
 
-            NewFile();
+            file.NewFile();
         }
 
         private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -35,24 +38,24 @@ namespace IntNote
                 return;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                OpenFile(openFileDialog1.FileName);
+                file.OpenFile(openFileDialog1.FileName);
         }
 
         private void SaveFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(currentFile))
+            if (string.IsNullOrEmpty(file.CurrentFile))
             {
                 SaveAsFile_ToolStripMenuItem_Click(sender, e);
                 return;
             }
 
-            SaveFile(currentFile);
+            file.SaveFile(mainTextBox.Text);
         }
 
         private void SaveAsFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                SaveFile(saveFileDialog1.FileName);
+                file.SaveAsFile(saveFileDialog1.FileName, mainTextBox.Text);
         }
 
         private void ExitProgram_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,19 +101,19 @@ namespace IntNote
         private void FontFaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (fontDialog1.ShowDialog() == DialogResult.OK)
-                mainTextBox.Font = fontDialog1.Font;
+                theme.SetFont(fontDialog1.Font);
         }
 
         private void FontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-                SetStyle(fg: colorDialog1.Color);
+                theme.SetStyle(fg: colorDialog1.Color);
         }
 
         private void PageColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-                SetStyle(bg: colorDialog1.Color);
+                theme.SetStyle(bg: colorDialog1.Color);
         }
 
         private void TrueDarkToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#9A9A9A");
@@ -121,52 +124,31 @@ namespace IntNote
 
         private void JazzyAmoledToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#000000");
 
-        private void SetTheme(string bg) => SetStyle(fg: Color.White, bg: ColorTranslator.FromHtml(bg));
+        private void SetTheme(string bg) => theme.SetStyle(fg: Color.White, bg: ColorTranslator.FromHtml(bg));
 
-        private void SetStyle(Color? fg = null, Color? bg = null)
-        {
-            if (fg != null)
-                mainTextBox.ForeColor = (Color)fg;
-
-            if (bg != null)
-                mainTextBox.BackColor = (Color)bg;
-        }
-
-        private void NewFile()
+        public void ClearFile()
         {
             mainTextBox.ClearUndo();
             mainTextBox.Clear();
-
-            currentFile = "";
-            dirty = false;
         }
 
-        private void OpenFile(string file)
+        public void SetFile(string fileData)
         {
             mainTextBox.ClearUndo();
-            mainTextBox.Text = File.ReadAllText(file);
+            mainTextBox.Text = fileData;
             mainTextBox.SelectionStart = 0;
             mainTextBox.SelectionLength = 0;
-
-            openFileDialog1.FileName = file;
-            saveFileDialog1.FileName = file;
-            currentFile = file;
-            dirty = false;
         }
 
-        private void SaveFile(string file)
+        public void AnnounceFile(string filePath)
         {
-            File.WriteAllText(file, mainTextBox.Text);
-
-            openFileDialog1.FileName = file;
-            saveFileDialog1.FileName = file;
-            currentFile = file;
-            dirty = false;
+            openFileDialog1.FileName = filePath;
+            saveFileDialog1.FileName = filePath;
         }
 
         private bool DirtyCheckPass(string operation)
         {
-            if (dirty)
+            if (file.Dirty)
             {
                 DialogResult result = new MessageForm
                 {
