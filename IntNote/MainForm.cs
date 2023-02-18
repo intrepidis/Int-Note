@@ -11,6 +11,7 @@ namespace IntNote
         {
             InitializeComponent();
 
+            searchForm = new SearchForm(FindNextText, FindPreviousText, ReplaceSelectedText);
             theme = new(() => mainTextBox);
             file = new(ClearFile, SetFile, AnnounceFile);
 
@@ -19,6 +20,7 @@ namespace IntNote
         }
 
         private static readonly string nl = Environment.NewLine;
+        private readonly SearchForm searchForm;
         private readonly ThemeManager theme;
         private readonly FileHandler file;
 
@@ -98,6 +100,43 @@ namespace IntNote
             }.ShowDialog(this);
         }
 
+        private void Find_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            searchForm.txtReplace.Text = "";
+            searchForm.txtFind.Text = mainTextBox.SelectedText;
+
+            if (!searchForm.Visible)
+                searchForm.Show(this);
+            else
+                searchForm.Activate();
+
+            searchForm.Invoke(Act);
+
+            void Act()
+            {
+                searchForm.txtFind.SelectAll();
+                searchForm.txtFind.Focus();
+            }
+        }
+
+        private void Replace_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            searchForm.txtFind.Text = mainTextBox.SelectedText;
+            searchForm.txtReplace.Text = "";
+
+            if (!searchForm.Visible)
+                searchForm.Show(this);
+            else
+                searchForm.Activate();
+
+            searchForm.Invoke(Act);
+
+            void Act()
+            {
+                searchForm.txtReplace.Focus();
+            }
+        }
+
         private void WordWrap_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int selectionStart = mainTextBox.SelectionStart;
@@ -114,13 +153,7 @@ namespace IntNote
                 mainTextBox.ScrollBars = ScrollBars.Vertical;
             }
 
-            mainTextBox.SelectionStart = mainTextBox.Text.Length;
-            mainTextBox.SelectionLength = 0;
-            mainTextBox.ScrollToCaret();
-
-            mainTextBox.SelectionStart = selectionStart;
-            mainTextBox.SelectionLength = selectionLength;
-            mainTextBox.ScrollToCaret();
+            SelectAndScrollTo(selectionStart, selectionLength);
         }
 
         private void FontFaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -150,6 +183,90 @@ namespace IntNote
         private void JazzyAmoledToolStripMenuItem_Click(object sender, EventArgs e) => SetTheme("#000000");
 
         private void SetTheme(string bg) => theme.SetStyle(fg: Color.White, bg: ColorTranslator.FromHtml(bg));
+
+        public void FindNextText(string find, bool caseSensitive)
+        {
+            int start = mainTextBox.SelectionStart + mainTextBox.SelectionLength;
+            StringComparison compareType = CompareType(caseSensitive);
+
+            int matchPos = mainTextBox.Text.IndexOf(find, start, compareType);
+            if (matchPos == -1 && start > 0)
+                matchPos = mainTextBox.Text.IndexOf(find, 0, start, compareType);
+            if (matchPos == -1)
+            {
+                NotFound();
+                return;
+            }
+
+            SelectAndScrollTo(matchPos, find.Length);
+        }
+
+        public void FindPreviousText(string find, bool caseSensitive)
+        {
+            int start = mainTextBox.SelectionStart;
+            int end = mainTextBox.Text.Length;
+            int count = end - (mainTextBox.SelectionStart + mainTextBox.SelectionLength);
+            StringComparison compareType = CompareType(caseSensitive);
+
+            int matchPos = mainTextBox.Text.LastIndexOf(find, start - 1, compareType);
+            if (matchPos == -1 && start > 0)
+                matchPos = mainTextBox.Text.LastIndexOf(find, end - 1, count, compareType);
+            if (matchPos == -1)
+            {
+                NotFound();
+                return;
+            }
+
+            SelectAndScrollTo(matchPos, find.Length);
+        }
+
+        public void ReplaceSelectedText(string expectedText, string newText, bool caseSensitive)
+        {
+            StringComparison compareType = CompareType(caseSensitive);
+            if (!string.Equals(mainTextBox.SelectedText, expectedText, compareType))
+                return;
+
+            int selectionStart = mainTextBox.SelectionStart;
+            mainTextBox.SelectedText = newText;
+            mainTextBox.SelectionStart = selectionStart;
+            mainTextBox.SelectionLength = newText.Length;
+
+            file.Dirty = true;
+        }
+
+        private StringComparison CompareType(bool caseSensitive)
+            => caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+
+        private void NotFound()
+            => new MessageForm
+            {
+                Message = "The specified text was not found.",
+                Title = "Find",
+            }.ShowDialog(this);
+
+        private void SelectAndScrollTo(int selectionStart, int selectionLength)
+        {
+            mainTextBox.Select(mainTextBox.Text.Length, 0);
+            mainTextBox.ScrollToCaret();
+
+            mainTextBox.Select(BackSome(), 0);
+            mainTextBox.ScrollToCaret();
+
+            mainTextBox.Select(selectionStart, selectionLength);
+
+            int BackSome()
+            {
+                int back = selectionStart;
+                for (int i = 0; i < 8; i++)
+                {
+                    back = mainTextBox.Text.LastIndexOf(nl, back);
+                    back -= nl.Length;
+                    if (back < 0)
+                        return 0;
+                }
+                return back;
+            }
+        }
 
         public void ClearFile()
         {
