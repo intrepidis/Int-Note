@@ -24,8 +24,6 @@ namespace IntNote
         private readonly ThemeManager theme;
         private readonly FileHandler file;
 
-        private void MainTextBox_TextChanged(object sender, EventArgs e) => file.Dirty = true;
-
         private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!DirtyCheckPass("Create New File"))
@@ -230,8 +228,6 @@ namespace IntNote
             mainTextBox.SelectedText = newText;
             mainTextBox.SelectionStart = selectionStart;
             mainTextBox.SelectionLength = newText.Length;
-
-            file.Dirty = true;
         }
 
         private StringComparison CompareType(bool caseSensitive)
@@ -290,7 +286,7 @@ namespace IntNote
 
         private bool DirtyCheckPass(string operation)
         {
-            if (file.Dirty)
+            if (!file.DoesHashMatch(mainTextBox.Text))
             {
                 DialogResult result = new MessageForm
                 {
