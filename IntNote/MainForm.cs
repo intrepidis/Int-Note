@@ -7,7 +7,7 @@ namespace IntNote
 {
     public partial class MainForm : Form
     {
-        public MainForm(string filePath)
+        public MainForm(string version, string filePath)
         {
             InitializeComponent();
 
@@ -15,7 +15,24 @@ namespace IntNote
             theme = new(() => mainTextBox);
             file = new(ClearFile, SetFile, AnnounceFile);
 
-            TryOpenFile(filePath);
+            appVersion = version;
+            commandLineFile = filePath;
+        }
+
+        private static readonly string nl = Environment.NewLine;
+        private readonly SearchForm searchForm;
+        private readonly ThemeManager theme;
+        private readonly FileHandler file;
+        private string appVersion;
+        private string commandLineFile;
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (commandLineFile.Length > 0)
+            {
+                TryOpenFile(commandLineFile);
+                commandLineFile = "";
+            }
 
             void TryOpenFile(string filePath)
             {
@@ -36,11 +53,6 @@ namespace IntNote
                 AnnounceFile(filePath);
             }
         }
-
-        private static readonly string nl = Environment.NewLine;
-        private readonly SearchForm searchForm;
-        private readonly ThemeManager theme;
-        private readonly FileHandler file;
 
         private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -111,7 +123,7 @@ namespace IntNote
         {
             new MessageForm
             {
-                Message = $"{nl}{nl}{nl}Int-Note - Text editor in dark mode{nl}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
+                Message = $"{nl}{nl}{nl}Int-Note{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
                 Title = "About Int-Note",
             }.ShowDialog(this);
         }

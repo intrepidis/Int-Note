@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -17,6 +17,7 @@
     <PackageIcon>Int-Note icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/intrepidis/Int-Note</RepositoryUrl>
     <PackageTags>text;editor;dark;night</PackageTags>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
