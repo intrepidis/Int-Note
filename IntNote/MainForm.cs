@@ -15,8 +15,26 @@ namespace IntNote
             theme = new(() => mainTextBox);
             file = new(ClearFile, SetFile, AnnounceFile);
 
-            if (!string.IsNullOrEmpty(filePath))
-                file.OpenFile(filePath);
+            TryOpenFile(filePath);
+
+            void TryOpenFile(string filePath)
+            {
+                if (!string.IsNullOrEmpty(filePath))
+                    try
+                    {
+                        filePath = Environment.ExpandEnvironmentVariables(filePath);
+                        filePath = Path.GetFullPath(filePath);
+                        if (File.Exists(filePath))
+                        {
+                            file.OpenFile(filePath);
+                            return;
+                        }
+                    }
+                    catch (Exception) { }
+
+                filePath = Environment.CurrentDirectory + "\\";
+                AnnounceFile(filePath);
+            }
         }
 
         private static readonly string nl = Environment.NewLine;
@@ -282,6 +300,14 @@ namespace IntNote
         {
             openFileDialog1.FileName = filePath;
             saveFileDialog1.FileName = filePath;
+
+            string? folder = Path.GetDirectoryName(filePath);
+            MessageBox.Show(this, folder);
+            if (!string.IsNullOrEmpty(folder))
+            {
+                openFileDialog1.InitialDirectory = folder;
+                saveFileDialog1.InitialDirectory = folder;
+            }
         }
 
         private bool DirtyCheckPass(string operation)
