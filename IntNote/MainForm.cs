@@ -302,7 +302,6 @@ namespace IntNote
             saveFileDialog1.FileName = filePath;
 
             string? folder = Path.GetDirectoryName(filePath);
-            MessageBox.Show(this, folder);
             if (!string.IsNullOrEmpty(folder))
             {
                 openFileDialog1.InitialDirectory = folder;
