@@ -64,6 +64,14 @@ namespace IntNote
                 txtMessage.Width);
 
             Height += (int)size.Height - txtMessage.Height + txtMessage.Font.Height;
+
+            // A hack because I can't get DPI awareness working right.
+            if (btnOK.Bottom > ClientRectangle.Bottom)
+            {
+                int x = btnOK.Location.X;
+                int y = btnOK.Location.Y + (ClientRectangle.Bottom - btnOK.Bottom);
+                btnOK.Location = new Point(x, y);
+            }
         }
 
         private void InhibitEscapeKeyClosing()
