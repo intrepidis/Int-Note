@@ -11,7 +11,7 @@ namespace IntNote
         {
             InitializeComponent();
 
-            searchForm = new SearchForm(FindNextText, FindPreviousText, ReplaceSelectedText);
+            searchForm = new SearchForm(Activate, FindNextText, FindPreviousText, ReplaceSelectedText);
             theme = new(() => mainTextBox);
             file = new(ClearFile, SetFile, AnnounceFile);
 
@@ -236,7 +236,7 @@ namespace IntNote
         private void NotFound()
             => new MessageForm
             {
-                Message = "The specified text was not found.",
+                Message = $"{nl}The specified text was not found.{nl}",
                 Title = "Find",
             }.ShowDialog(this);
 
@@ -290,7 +290,7 @@ namespace IntNote
             {
                 DialogResult result = new MessageForm
                 {
-                    Message = $"{nl}Is it ok to lose the unsaved changes?{nl}{nl}{nl}",
+                    Message = $"{nl}Is it ok to lose the unsaved changes?{nl}",
                     Title = operation,
                     CancelText = "Cancel",
                     SwitchButtonLocations = true,

@@ -30,76 +30,77 @@
         {
             this.btnOK = new System.Windows.Forms.Button();
             this.txtMessage = new IntNote.TextArea();
-            this.panelMain = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.panelMain.SuspendLayout();
+            this.groupBoxMain = new System.Windows.Forms.GroupBox();
+            this.groupBoxMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(551, 167);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(4);
+            this.btnOK.Location = new System.Drawing.Point(460, 79);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(100, 34);
+            this.btnOK.Size = new System.Drawing.Size(83, 28);
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
             // txtMessage
             // 
-            this.txtMessage.BackColor = System.Drawing.SystemColors.Window;
+            this.txtMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtMessage.Location = new System.Drawing.Point(0, 0);
+            this.txtMessage.ForeColor = System.Drawing.SystemColors.Window;
+            this.txtMessage.Location = new System.Drawing.Point(9, 16);
             this.txtMessage.Margin = new System.Windows.Forms.Padding(0);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
-            this.txtMessage.Size = new System.Drawing.Size(667, 128);
+            this.txtMessage.Size = new System.Drawing.Size(523, 36);
             this.txtMessage.TabIndex = 0;
             this.txtMessage.TabStop = false;
             this.txtMessage.Text = "txtMessage";
             this.txtMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // panelMain
-            // 
-            this.panelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelMain.BackColor = System.Drawing.SystemColors.Window;
-            this.panelMain.Controls.Add(this.txtMessage);
-            this.panelMain.Location = new System.Drawing.Point(0, 0);
-            this.panelMain.Margin = new System.Windows.Forms.Padding(0);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(667, 128);
-            this.panelMain.TabIndex = 2;
-            // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(427, 167);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancel.Location = new System.Drawing.Point(356, 79);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 34);
+            this.btnCancel.Size = new System.Drawing.Size(83, 28);
             this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // groupBoxMain
+            // 
+            this.groupBoxMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMain.Controls.Add(this.txtMessage);
+            this.groupBoxMain.Location = new System.Drawing.Point(8, 0);
+            this.groupBoxMain.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBoxMain.Name = "groupBoxMain";
+            this.groupBoxMain.Size = new System.Drawing.Size(541, 62);
+            this.groupBoxMain.TabIndex = 3;
+            this.groupBoxMain.TabStop = false;
+            // 
             // MessageForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(115F, 115F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.CancelButton = this.btnOK;
-            this.ClientSize = new System.Drawing.Size(667, 218);
+            this.ClientSize = new System.Drawing.Size(557, 122);
             this.ControlBox = false;
-            this.Controls.Add(this.panelMain);
+            this.Controls.Add(this.groupBoxMain);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MessageForm";
@@ -108,8 +109,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageForm";
             this.Load += new System.EventHandler(this.MessageForm_Load);
-            this.panelMain.ResumeLayout(false);
-            this.panelMain.PerformLayout();
+            this.groupBoxMain.ResumeLayout(false);
+            this.groupBoxMain.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -117,7 +118,7 @@
         #endregion
         private System.Windows.Forms.Button btnOK;
         private IntNote.TextArea txtMessage;
-        private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Button btnCancel;
+        private GroupBox groupBoxMain;
     }
 }

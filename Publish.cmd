@@ -2,7 +2,7 @@
 
 call "%INT_CMD%\cn_dev.bat"
 
-set BUILD_PATH=.\IntNote\bin\Release\net7.0-windows10.0.19041.0
+set BUILD_PATH=.\IntNote\bin\Release\net7.0-windows
 call :GET_CANONICAL_PATH "%BUILD_PATH%"
 set BUILD_PATH=%RETURN_PATH%
 

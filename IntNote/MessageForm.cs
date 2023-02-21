@@ -62,6 +62,7 @@ namespace IntNote
                 txtMessage.Text + ".",
                 txtMessage.Font,
                 txtMessage.Width);
+
             Height += (int)size.Height - txtMessage.Height + txtMessage.Font.Height;
         }
 

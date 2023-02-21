@@ -9,15 +9,17 @@ namespace IntNote
     /// </summary>
     public partial class SearchForm : Form
     {
-        public SearchForm(Action<string, bool> findNextText, Action<string, bool> findPreviousText, Action<string, string, bool> replaceSelectedText)
+        public SearchForm(Action onClosing, Action<string, bool> findNextText, Action<string, bool> findPreviousText, Action<string, string, bool> replaceSelectedText)
         {
             InitializeComponent();
 
+            onClose = onClosing;
             findNext = findNextText;
             findPrevious = findPreviousText;
             replaceSelection = replaceSelectedText;
         }
 
+        private readonly Action onClose;
         private readonly Action<string, bool> findNext;
         private readonly Action<string, bool> findPrevious;
         private readonly Action<string, string, bool> replaceSelection;
@@ -25,11 +27,13 @@ namespace IntNote
         private void SearchForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
+            onClose();
             Hide();
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
         {
+            onClose();
             Hide();
         }
 

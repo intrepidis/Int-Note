@@ -33,15 +33,15 @@ namespace IntNote
             CurrentFile = "";
         }
 
-        public void OpenFile(string file)
+        public void OpenFile(string filePath)
         {
-            string fileData = File.ReadAllText(file);
+            string fileData = File.ReadAllText(filePath);
             setFile(fileData);
             StoreHash(fileData);
 
-            announceFile(file);
+            announceFile(filePath);
 
-            CurrentFile = file;
+            CurrentFile = filePath;
         }
 
         public void SaveFile(string fileData)
