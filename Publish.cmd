@@ -20,6 +20,7 @@ rmdir /S /Q "%PUBLISH_PATH%"
 mkdir "%PUBLISH_PATH%"
 
 robocopy /njh /njs /nc /np /w:5 /s "%BUILD_PATH%" "%PUBLISH_PATH%" *.exe *.dll *.json
+copy .\CreateContextMenu.reg "%PUBLISH_PATH%"
 if %ERRORLEVEL% leq 7 goto :SUCCESS
 
 :FAILURE
