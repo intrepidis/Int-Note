@@ -71,6 +71,10 @@ namespace IntNote
                 int x = btnOK.Location.X;
                 int y = btnOK.Location.Y + (ClientRectangle.Bottom - btnOK.Bottom);
                 btnOK.Location = new Point(x, y);
+                
+                x = btnCancel.Location.X;
+                y = btnCancel.Location.Y + (ClientRectangle.Bottom - btnCancel.Bottom);
+                btnCancel.Location = new Point(x, y);
             }
         }
 
