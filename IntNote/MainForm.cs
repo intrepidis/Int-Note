@@ -14,11 +14,17 @@ namespace IntNote
             Text = appName = name;
 
             searchForm = new SearchForm(Activate, FindNextText, FindPreviousText, ReplaceSelectedText);
-            theme = new(() => mainTextBox);
-            file = new(ClearFile, SetFile, AnnounceFile);
+            theme = new ThemeManager(() => mainTextBox);
+            file = new FileHandler(ClearFile, SetFile, AnnounceFile);
+
+            FileDialogSettings(openFileDialog1);
+            FileDialogSettings(saveFileDialog1);
 
             appVersion = version;
             commandLineFile = filePath;
+
+            void FileDialogSettings(FileDialog d)
+                => d.Filter = "Text Files|*.txt|All Files|*.*";
         }
 
         private static readonly string nl = Environment.NewLine;
@@ -328,8 +334,8 @@ namespace IntNote
 
         private void SetTitleBar(string filePath)
         {
-            string fileName = Path.GetFileName(filePath);
-            string folderPath = Path.GetDirectoryName(filePath);
+            string fileName = Path.GetFileName(filePath) ?? "";
+            string folderPath = Path.GetDirectoryName(filePath) ?? "";
             Text = $"{fileName} : ({folderPath}) : {appName}";
         }
 
