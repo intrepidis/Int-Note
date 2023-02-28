@@ -20,8 +20,8 @@ namespace IntNote
         private readonly Action clearFile;
         private readonly Action<string> setFile;
         private readonly Action<string> announceFile;
-        private int dirtyHash;
-        private int dirtyLength;
+        private int originalHash;
+        private int originalLength;
 
         public string CurrentFile { get; private set; } = "";
 
@@ -61,15 +61,15 @@ namespace IntNote
 
         private void StoreHash(string fileData)
         {
-            dirtyHash = fileData.GetHashCode();
-            dirtyLength = fileData.Length;
+            originalHash = fileData.GetHashCode();
+            originalLength = fileData.Length;
         }
 
         public bool DoesHashMatch(string fileData)
         {
-            if (fileData.Length != dirtyLength)
+            if (fileData.Length != originalLength)
                 return false;
-            return fileData.GetHashCode() == dirtyHash;
+            return fileData.GetHashCode() == originalHash;
         }
     }
 }

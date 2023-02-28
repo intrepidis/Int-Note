@@ -65,7 +65,7 @@ namespace IntNote
 
         private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DirtyCheckPass("Create New File"))
+            if (!ModifiedCheckInteraction("Create New File"))
                 return;
 
             file.NewFile();
@@ -73,7 +73,7 @@ namespace IntNote
 
         private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DirtyCheckPass("Open File"))
+            if (!ModifiedCheckInteraction("Open File"))
                 return;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -99,7 +99,7 @@ namespace IntNote
 
         private void ExitProgram_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DirtyCheckPass("Exit"))
+            if (!ModifiedCheckInteraction("Exit"))
                 return;
 
             Close();
@@ -107,7 +107,7 @@ namespace IntNote
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !DirtyCheckPass("Exit");
+            e.Cancel = !ModifiedCheckInteraction("Exit");
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,7 +339,7 @@ namespace IntNote
             Text = $"{fileName} : ({folderPath}) : {appName}";
         }
 
-        private bool DirtyCheckPass(string operation)
+        private bool ModifiedCheckInteraction(string operation)
         {
             if (!file.DoesHashMatch(mainTextBox.Text))
             {
