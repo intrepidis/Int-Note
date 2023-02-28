@@ -39,9 +39,10 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(460, 98);
+            this.btnOK.Location = new System.Drawing.Point(551, 98);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(83, 28);
+            this.btnOK.Size = new System.Drawing.Size(99, 34);
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -54,23 +55,25 @@
             this.txtMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtMessage.ForeColor = System.Drawing.SystemColors.Window;
-            this.txtMessage.Location = new System.Drawing.Point(9, 16);
+            this.txtMessage.Location = new System.Drawing.Point(11, 19);
             this.txtMessage.Margin = new System.Windows.Forms.Padding(0);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
-            this.txtMessage.Size = new System.Drawing.Size(523, 54);
+            this.txtMessage.Size = new System.Drawing.Size(627, 46);
             this.txtMessage.TabIndex = 0;
             this.txtMessage.TabStop = false;
+            this.txtMessage.Text = "txtMessage";
             this.txtMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(356, 98);
+            this.btnCancel.Location = new System.Drawing.Point(426, 98);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(83, 28);
+            this.btnCancel.Size = new System.Drawing.Size(99, 34);
             this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -81,31 +84,34 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMain.Controls.Add(this.txtMessage);
-            this.groupBoxMain.Location = new System.Drawing.Point(8, 0);
+            this.groupBoxMain.Location = new System.Drawing.Point(10, 0);
             this.groupBoxMain.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxMain.Name = "groupBoxMain";
-            this.groupBoxMain.Size = new System.Drawing.Size(541, 80);
+            this.groupBoxMain.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxMain.Size = new System.Drawing.Size(648, 77);
             this.groupBoxMain.TabIndex = 3;
             this.groupBoxMain.TabStop = false;
             // 
             // MessageForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(115F, 115F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.CancelButton = this.btnOK;
-            this.ClientSize = new System.Drawing.Size(557, 140);
+            this.ClientSize = new System.Drawing.Size(667, 149);
             this.ControlBox = false;
             this.Controls.Add(this.groupBoxMain);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MessageForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "MessageForm";
             this.Load += new System.EventHandler(this.MessageForm_Load);
             this.groupBoxMain.ResumeLayout(false);
             this.groupBoxMain.PerformLayout();

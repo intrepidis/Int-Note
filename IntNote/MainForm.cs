@@ -7,11 +7,9 @@ namespace IntNote
 {
     public partial class MainForm : Form
     {
-        public MainForm(string name, string version, string filePath)
+        public MainForm(string version, string filePath)
         {
             InitializeComponent();
-
-            Text = appName = name;
 
             searchForm = new SearchForm(Activate, FindNextText, FindPreviousText, ReplaceSelectedText);
             theme = new(() => mainTextBox);
@@ -25,7 +23,6 @@ namespace IntNote
         private readonly SearchForm searchForm;
         private readonly ThemeManager theme;
         private readonly FileHandler file;
-        private string appName;
         private string appVersion;
         private string commandLineFile;
 
@@ -93,7 +90,7 @@ namespace IntNote
 
         private void ExitProgram_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DirtyCheckPass("Exit"))
+            if (!DirtyCheckPass("Exit App"))
                 return;
 
             Close();
@@ -101,7 +98,7 @@ namespace IntNote
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !DirtyCheckPass("Exit");
+            e.Cancel = !DirtyCheckPass("Exit App");
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -126,8 +123,8 @@ namespace IntNote
         {
             new MessageForm
             {
-                Message = $"{nl}{nl}{nl}{appName}{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
-                Title = "About",
+                Message = $"{nl}{nl}{nl}Int-Note{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
+                Title = "About Int-Note",
             }.ShowDialog(this);
         }
 
@@ -313,8 +310,6 @@ namespace IntNote
 
         public void AnnounceFile(string filePath)
         {
-            SetTitleBar(filePath);
-
             openFileDialog1.FileName = filePath;
             saveFileDialog1.FileName = filePath;
 
@@ -326,13 +321,6 @@ namespace IntNote
             }
         }
 
-        private void SetTitleBar(string filePath)
-        {
-            string fileName = Path.GetFileName(filePath);
-            string folderPath = Path.GetDirectoryName(filePath);
-            Text = $"{fileName} : ({folderPath}) : {appName}";
-        }
-
         private bool DirtyCheckPass(string operation)
         {
             if (!file.DoesHashMatch(mainTextBox.Text))
@@ -341,8 +329,7 @@ namespace IntNote
                 {
                     Message = $"{nl}Is it ok to lose the unsaved changes?{nl}",
                     Title = operation,
-                    OkayText = "LOSE CHANGES",
-                    CancelText = "Stay Open",
+                    CancelText = "Cancel",
                     SwitchButtonLocations = true,
                 }.ShowDialog(this);
 
