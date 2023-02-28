@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,7 +10,7 @@
     <StartupObject>IntNote.Program</StartupObject>
     <ApplicationIcon>intnote.ico</ApplicationIcon>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>C:\Code\IntrepidisSNK.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>C:\Code\Zymo-ZX1\CNashSNK.pfx</AssemblyOriginatorKeyFile>
     <Title>Int-Note</Title>
     <Description>Text editor in dark mode.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

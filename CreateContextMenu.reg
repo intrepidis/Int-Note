@@ -2,8 +2,8 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\*\shell\OpenWithIntNote]
 @="Edit with &Int-Note"
-"Icon"="\"C:\\Code\\Intrepidis Note\\Publish\\IntNote.exe\""
+"Icon"="\"C:\\Users\\Chris.Nash\\OneDrive - DPR Consulting Ltd\\.software\\General Utils\\Int-Note\\IntNote.exe\""
 
 [HKEY_CLASSES_ROOT\*\shell\OpenWithIntNote\command]
-@="\"C:\\Code\\Intrepidis Note\\Publish\\IntNote.exe\" \"%1\""
+@="\"C:\\Users\\Chris.Nash\\OneDrive - DPR Consulting Ltd\\.software\\General Utils\\Int-Note\\IntNote.exe\" \"%1\""
 
