@@ -68,6 +68,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.mainTextBox = new System.Windows.Forms.TextBox();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -89,7 +90,7 @@
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.menuStrip1.Size = new System.Drawing.Size(1100, 24);
             this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Text = "Menu";
             // 
             // fileToolStripMenuItem
             // 
@@ -347,12 +348,10 @@
             // 
             this.printDialog1.UseEXDialog = true;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // mainTextBox
             // 
+            this.mainTextBox.AcceptsReturn = true;
+            this.mainTextBox.AcceptsTab = true;
             this.mainTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.mainTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.mainTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -360,11 +359,13 @@
             this.mainTextBox.HideSelection = false;
             this.mainTextBox.Location = new System.Drawing.Point(0, 0);
             this.mainTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.mainTextBox.MaxLength = 10485760;
             this.mainTextBox.Multiline = true;
             this.mainTextBox.Name = "mainTextBox";
             this.mainTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.mainTextBox.Size = new System.Drawing.Size(1100, 756);
             this.mainTextBox.TabIndex = 1;
+            this.mainTextBox.TextChanged += new System.EventHandler(this.MainTextBox_TextChanged);
             // 
             // toolStripContainer1
             // 
@@ -384,6 +385,11 @@
             // toolStripContainer1.TopToolStripPanel
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.menuStrip1);
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -451,5 +457,6 @@
         private ToolStripMenuItem searchToolStripMenuItem;
         private ToolStripMenuItem findToolStripMenuItem;
         private ToolStripMenuItem replaceToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

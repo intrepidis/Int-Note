@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ namespace IntNote
         private string appName;
         private string appVersion;
         private string commandLineFile;
+        private bool titleBarSaysModified;
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -108,6 +110,29 @@ namespace IntNote
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !ModifiedCheckInteraction("Exit");
+        }
+
+        private void MainTextBox_TextChanged(object sender, EventArgs e)
+        {
+            while (backgroundWorker1.IsBusy)
+                Application.DoEvents();
+            backgroundWorker1.RunWorkerAsync(mainTextBox.Text);
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (e.Argument == null)
+                return;
+            string text = (string)e.Argument;
+            bool isModified = !file.DoesHashMatch(text);
+            e.Result = isModified;
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            bool isModified = (bool?)e.Result ?? false;
+            if (isModified != titleBarSaysModified)
+                SetTitleBar(openFileDialog1.FileName, isModified);
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -319,7 +344,7 @@ namespace IntNote
 
         public void AnnounceFile(string filePath)
         {
-            SetTitleBar(filePath);
+            SetTitleBar(filePath, isModified: false);
 
             openFileDialog1.FileName = filePath;
             saveFileDialog1.FileName = filePath;
@@ -332,11 +357,20 @@ namespace IntNote
             }
         }
 
-        private void SetTitleBar(string filePath)
+        private void SetTitleBar(string filePath, bool isModified)
         {
-            string fileName = Path.GetFileName(filePath) ?? "";
-            string folderPath = Path.GetDirectoryName(filePath) ?? "";
-            Text = $"{fileName} : ({folderPath}) : {appName}";
+            titleBarSaysModified = isModified;
+            string modifiedPrefix = isModified ? "* " : "";
+            if (filePath.Length == 0)
+            {
+                Text = $"{modifiedPrefix}{appName}";
+            }
+            else
+            {
+                string fileName = Path.GetFileName(filePath) ?? "";
+                string folderPath = Path.GetDirectoryName(filePath) ?? "";
+                Text = $"{modifiedPrefix}{fileName} : ({folderPath}) : {appName}";
+            }
         }
 
         private bool ModifiedCheckInteraction(string operation)
