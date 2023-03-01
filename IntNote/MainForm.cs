@@ -114,25 +114,47 @@ namespace IntNote
 
         private void MainTextBox_TextChanged(object sender, EventArgs e)
         {
-            while (backgroundWorker1.IsBusy)
-                Application.DoEvents();
-            backgroundWorker1.RunWorkerAsync(mainTextBox.Text);
+            //while (backgroundWorker1.IsBusy)
+            //    Application.DoEvents();
+            //backgroundWorker1.RunWorkerAsync(mainTextBox.Text);
+            Poop();
+        }
+
+        private async void Poop()
+        {
+            string text = mainTextBox.Text;
+
+            await Task.Run(() =>
+            {
+                bool isModified = !file.DoesHashMatch(text);
+                var p = Enumerable.Range(2, 10000).ToList().Aggregate("1", (s, i) => $"{s} {i}");
+            });
+
+            if (isModified != titleBarSaysModified)
+            {
+                SetTitleBar(openFileDialog1.FileName, isModified);
+                this.Invoke(Poop);
+            }
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (e.Argument == null)
-                return;
-            string text = (string)e.Argument;
-            bool isModified = !file.DoesHashMatch(text);
-            e.Result = isModified;
+            //if (e.Argument == null)
+            //    return;
+            //string text = (string)e.Argument;
+            //bool isModified = !file.DoesHashMatch(text);
+            //var p = Enumerable.Range(2, 10000).ToList().Aggregate("1", (s, i) => $"{s} {i}");
+            //e.Result = isModified;
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            bool isModified = (bool?)e.Result ?? false;
-            if (isModified != titleBarSaysModified)
-                SetTitleBar(openFileDialog1.FileName, isModified);
+            //bool isModified = (bool?)e.Result ?? false;
+            //if (isModified != titleBarSaysModified)
+            //{
+            //    SetTitleBar(openFileDialog1.FileName, isModified);
+            //    backgroundWorker1.RunWorkerAsync(mainTextBox.Text);
+            //}
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
