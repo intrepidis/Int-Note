@@ -33,6 +33,9 @@ namespace IntNote
             CurrentFile = "";
         }
 
+        public bool ValidateLength(string filePath, int maxFileSizeLimit)
+            => new FileInfo(filePath).Length < maxFileSizeLimit;
+
         public void OpenFile(string filePath)
         {
             string fileData = File.ReadAllText(filePath);

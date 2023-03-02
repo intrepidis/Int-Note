@@ -37,7 +37,7 @@ namespace IntNote
         private string commandLineFile;
         private bool titleBarSaysModified;
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             if (commandLineFile.Length > 0)
             {
@@ -54,14 +54,20 @@ namespace IntNote
                         filePath = Path.GetFullPath(filePath);
                         if (File.Exists(filePath))
                         {
-                            file.OpenFile(filePath);
-                            return;
+                            if (OpenFileWithLengthCheck(filePath))
+                                return;
+
+                            string? folder = Path.GetDirectoryName(filePath);
+                            if (folder != null)
+                            {
+                                AnnounceFile(folder);
+                                return;
+                            }
                         }
                     }
                     catch (Exception) { }
 
-                filePath = Environment.CurrentDirectory + "\\";
-                AnnounceFile(filePath);
+                AnnounceFile(Environment.CurrentDirectory);
             }
         }
 
@@ -79,7 +85,7 @@ namespace IntNote
                 return;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                file.OpenFile(openFileDialog1.FileName);
+                OpenFileWithLengthCheck(openFileDialog1.FileName);
         }
 
         private void SaveFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -108,31 +114,20 @@ namespace IntNote
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = !ModifiedCheckInteraction("Exit");
-        }
+            => e.Cancel = !ModifiedCheckInteraction("Exit");
 
         private void MainTextBox_TextChanged(object sender, EventArgs e)
-        {
-            while (backgroundWorker1.IsBusy)
-                Application.DoEvents();
-            backgroundWorker1.RunWorkerAsync(mainTextBox.Text);
-        }
+            => CheckIfModified();
 
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async void CheckIfModified()
         {
-            if (e.Argument == null)
-                return;
-            string text = (string)e.Argument;
-            bool isModified = !file.DoesHashMatch(text);
-            e.Result = isModified;
-        }
-
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            bool isModified = (bool?)e.Result ?? false;
+            string text = mainTextBox.Text;
+            bool isModified = await Task.Run(() => !file.DoesHashMatch(text));
             if (isModified != titleBarSaysModified)
+            {
                 SetTitleBar(openFileDialog1.FileName, isModified);
+                Invoke(CheckIfModified);
+            }
         }
 
         private void PrintFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -154,13 +149,7 @@ namespace IntNote
             => mainTextBox.SelectAll();
 
         private void AboutAppToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new MessageForm
-            {
-                Message = $"{nl}{nl}{nl}{appName}{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
-                Title = "About",
-            }.ShowDialog(this);
-        }
+            => ShowAboutBox();
 
         private void Find_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -256,7 +245,7 @@ namespace IntNote
                 matchPos = mainTextBox.Text.IndexOf(find, 0, start, compareType);
             if (matchPos == -1)
             {
-                NotFound();
+                ShowSearchNotFound();
                 return;
             }
 
@@ -275,7 +264,7 @@ namespace IntNote
                 matchPos = mainTextBox.Text.LastIndexOf(find, end - 1, count, compareType);
             if (matchPos == -1)
             {
-                NotFound();
+                ShowSearchNotFound();
                 return;
             }
 
@@ -296,13 +285,6 @@ namespace IntNote
 
         private StringComparison CompareType(bool caseSensitive)
             => caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-
-        private void NotFound()
-            => new MessageForm
-            {
-                Message = $"{nl}The specified text was not found.{nl}",
-                Title = "Find",
-            }.ShowDialog(this);
 
         private void SelectAndScrollTo(int selectionStart, int selectionLength)
         {
@@ -344,17 +326,26 @@ namespace IntNote
 
         public void AnnounceFile(string filePath)
         {
+            if (new DirectoryInfo(filePath).Exists)
+            {
+                openFileDialog1.InitialDirectory = filePath;
+                saveFileDialog1.InitialDirectory = filePath;
+                filePath = "";
+            }
+            else
+            {
+                string? folder = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(folder))
+                {
+                    openFileDialog1.InitialDirectory = folder;
+                    saveFileDialog1.InitialDirectory = folder;
+                }
+            }
+
             SetTitleBar(filePath, isModified: false);
 
             openFileDialog1.FileName = filePath;
             saveFileDialog1.FileName = filePath;
-
-            string? folder = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(folder))
-            {
-                openFileDialog1.InitialDirectory = folder;
-                saveFileDialog1.InitialDirectory = folder;
-            }
         }
 
         private void SetTitleBar(string filePath, bool isModified)
@@ -371,6 +362,39 @@ namespace IntNote
                 string folderPath = Path.GetDirectoryName(filePath) ?? "";
                 Text = $"{modifiedPrefix}{fileName} : ({folderPath}) : {appName}";
             }
+        }
+
+        private void ShowAboutBox()
+            => new MessageForm
+            {
+                Message = $"{nl}{nl}{nl}{appName}{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
+                Title = "About",
+            }.ShowDialog(this);
+
+        private void ShowSearchNotFound()
+            => new MessageForm
+            {
+                Message = $"{nl}The specified text was not found.{nl}",
+                Title = "Find",
+            }.ShowDialog(this);
+
+        private bool OpenFileWithLengthCheck(string filePath)
+        {
+            int maxLength = mainTextBox.MaxLength;
+
+            if (file.ValidateLength(filePath, maxLength))
+            {
+                file.OpenFile(filePath);
+                return true;
+            }
+
+            new MessageForm
+            {
+                Message = $"{nl}File is too large. Maximum file size is {maxLength} bytes.{nl}",
+                Title = "Open File",
+            }.ShowDialog(this);
+
+            return false;
         }
 
         private bool ModifiedCheckInteraction(string operation)
