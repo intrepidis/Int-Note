@@ -40,6 +40,7 @@ namespace IntNote
         private string appVersion;
         private string commandLineFile;
         private bool titleBarSaysModified;
+        private bool enableTextChangedEvent = true;
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
@@ -118,10 +119,15 @@ namespace IntNote
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-            => e.Cancel = !ModifiedCheckInteraction("Exit");
+        {
+            e.Cancel = !ModifiedCheckInteraction("Exit");
+        }
 
         private void MainTextBox_TextChanged(object sender, EventArgs e)
-            => CheckIfModified();
+        {
+            if (enableTextChangedEvent)
+                CheckIfModified();
+        }
 
         private async void CheckIfModified()
         {
@@ -316,16 +322,26 @@ namespace IntNote
 
         public void ClearFile()
         {
+            enableTextChangedEvent = false;
+
             mainTextBox.ClearUndo();
             mainTextBox.Clear();
+
+            enableTextChangedEvent = true;
+
+            SetTitleBar("", false);
         }
 
         public void SetFile(string fileData)
         {
+            enableTextChangedEvent = false;
+
             mainTextBox.ClearUndo();
             mainTextBox.Text = fileData;
             mainTextBox.SelectionStart = 0;
             mainTextBox.SelectionLength = 0;
+
+            enableTextChangedEvent = true;
         }
 
         public void AnnounceFile(string filePath)
