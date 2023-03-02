@@ -14,6 +14,9 @@ namespace IntNote
 
             Text = appName = name;
 
+            double fractionOfMaxLengthToOpen = 0.8;
+            maximumLengthAllowed = (int)(mainTextBox.MaxLength * fractionOfMaxLengthToOpen);
+
             searchForm = new SearchForm(Activate, FindNextText, FindPreviousText, ReplaceSelectedText);
             theme = new ThemeManager(() => mainTextBox);
             file = new FileHandler(ClearFile, SetFile, AnnounceFile);
@@ -32,6 +35,7 @@ namespace IntNote
         private readonly SearchForm searchForm;
         private readonly ThemeManager theme;
         private readonly FileHandler file;
+        private readonly int maximumLengthAllowed;
         private string appName;
         private string appVersion;
         private string commandLineFile;
@@ -380,9 +384,7 @@ namespace IntNote
 
         private bool OpenFileWithLengthCheck(string filePath)
         {
-            int maxLength = mainTextBox.MaxLength;
-
-            if (file.ValidateLength(filePath, maxLength))
+            if (file.ValidateLength(filePath, maximumLengthAllowed))
             {
                 file.OpenFile(filePath);
                 return true;
@@ -390,7 +392,7 @@ namespace IntNote
 
             new MessageForm
             {
-                Message = $"{nl}File is too large. Maximum file size is {maxLength} bytes.{nl}",
+                Message = $"{nl}File is too large. Maximum file size is {maximumLengthAllowed:###,###,###,##0} bytes.{nl}",
                 Title = "Open File",
             }.ShowDialog(this);
 
