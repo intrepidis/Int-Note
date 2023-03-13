@@ -25,7 +25,7 @@ namespace IntNote
 
         public string CurrentFile { get; private set; } = "";
 
-        public void NewFile()
+        public void ClearFile()
         {
             clearFile();
             StoreHash("");

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -76,12 +77,24 @@ namespace IntNote
             }
         }
 
-        private void NewFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewWindow_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!ModifiedCheckInteraction("Create New File"))
+            try
+            {
+                Process.Start(Environment.ProcessPath);
+            }
+            catch
+            {
+                CannotOpenNewInstance();
+            }
+        }
+
+        private void ClearFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!ModifiedCheckInteraction("Clear File"))
                 return;
 
-            file.NewFile();
+            file.ClearFile();
         }
 
         private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -389,6 +402,13 @@ namespace IntNote
             {
                 Message = $"{nl}{nl}{nl}{appName}{nl}- Text editor in dark mode -{nl}{nl}v{appVersion}{nl}{nl}{nl}https://github.com/intrepidis/Int-Note{nl}",
                 Title = "About",
+            }.ShowDialog(this);
+
+        private void CannotOpenNewInstance()
+            => new MessageForm
+            {
+                Message = $"{nl}Unable to start new instance.{nl}",
+                Title = "New Window",
             }.ShowDialog(this);
 
         private void ShowSearchNotFound()
